@@ -1,4 +1,2 @@
 # Write current state of pf table <www_abusers> to file for future references
 pfctl -t www_abusers -T show > /etc/pf.www_abusers
-
-pfctl -t www_abusers -T show > /var/www/default/abuse/www_abusers.txt
