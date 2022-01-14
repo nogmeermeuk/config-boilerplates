@@ -71,6 +71,8 @@ This setup should work for [WeeChat >= 2.8](https://weechat.org/doc/).
 /set irc.server.liberachat.autojoin "#tilde.team"
 /set irc.server.liberachat.sasl_password "${sec.data.liberachat_nickserv_password}"
 /set irc.server.liberachat.sasl_username "meuk"
+# k, bye.
+/ignore add aqua@user liberachat
 /save
 ```
 
