@@ -1,2 +1,2 @@
 # Write current state of pf table <ssh_abusers> to file for future references
-pfctl -t ssh_abusers -T show > /etc/pf.ssh_abusers
+pfctl -t ssh_abusers -T show | sed 's/^ *//' > /etc/pf.ssh_abusers
