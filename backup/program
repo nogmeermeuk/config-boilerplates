@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Script       : backup
+# Last Update  : 2022-02-02
+# Purpose      : Sending encrypted backups to an offsite host,
+#                encryption and transmission is both done by
+#                restic.
+#
+# Author       : meuk
+# Email        : meuk@fastmail.com
+
+# =CONFIG OFFSITE BACKUP HOST
+user=
+host=
+repo_base=
+excludes="${HOME}/bin/scripts/backup/excludes.txt"
+repo_password="${HOME}/bin/scripts/backup/password.txt"
+
+# WARNING:
+#     DO NOT APPEND A TRAILING SLASH AT THE PATHS BELOW!
+#     THIS WILL MESS UP PARAMETER EXPANSION.
+#
+# Array with local directories that require a backup
+local_directories=(
+  
+)
+
+# =PROGRAM
+for directory in "${local_directories[@]}"; do
+    restic -r \
+      "sftp:${user}@${host}:${repo_base}${directory##*/}" \
+      "${excludes}" "${repo_password}" \
+      backup "${directory}"
+done
