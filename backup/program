@@ -51,7 +51,7 @@ done
 # Backup given directories to offsite host
 for directory in "${local_directories[@]}"; do
     restic -r \
-    "sftp:${host}:${repo_base}${directory##*/}" \
+    "sftp:${host}:${repo_base}/${directory##*/}" \
     --exclude-file="${excludes}" \
     --password-file="${repo_password}" \
     backup "${directory}"
