@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Sending encrypted backups to an offsite host,
+# encryption and transmitting is both done by
+# restic.
+
+# =CONFIG OFFSITE HOST
+#
+host=''
+repo_base=''
+excludes="${HOME}/bin/scripts/backup/excludes.txt"
+repo_password="${HOME}/bin/scripts/backup/password.txt"
+
+# WARNING:
+#     DO NOT APPEND A TRAILING SLASH AT THE PATHS BELOW!
+#     THIS WILL MESS UP PARAMETER EXPANSION.
+#
+# Array with local directories that require a backup
+local_directories=(
+    "$HOME/Audio" \
+    "$HOME/Documents" \
+    "$HOME/Notes" \
+    "$HOME/Pictures"
+)
+
+# =VARIABLES
+#
+# Set today's date and current time
+date_time=$(date "+%Y-%m-%d %H:%M")
+
+# =PROGRAM
+#
+Check is restic is installed
+if ! [[ -x "$(command -v restic)" ]]; then
+  # To Do: Write to system logger before exiting program.
+  exit 1
+fi
+
+# Check if local directories exist
+for directory in "${local_directories[@]}"; do
+  if ! [[ -d "${directory}" ]]; then
+    # To Do: Write to system logger before exiting program.
+    exit 1
+  fi
+done
+
+# Backup given directories to offsite host
+for directory in "${local_directories[@]}"; do
+    restic -r \
+    "sftp:${host}:${repo_base}/${directory##*/}" \
+    --exclude-file="${excludes}" \
+    --password-file="${repo_password}" \
+    backup "${directory}" \
+    > /dev/null 2> /dev/null
+    # To Do: Write to system logger before exiting program
+done
